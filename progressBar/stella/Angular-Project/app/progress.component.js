@@ -22,7 +22,7 @@ var ProgressComponent = (function () {
         core_1.Component({
             //<video-app>
             selector: 'video-progress',
-            template: "\n               <div id=\"progressMeterFull\">\n                     <div id=\"progressMeter\" [style.width.px]=\"videoService.calculatedWidth\"></div>\n                </div>\n                        <div id=\"thumbScrubber\" [style.top.px]=\"videoService.calculatedScrubY - 2\"\n                                                [style.left.px]=\"videoService.calculatedWidth\"></div>\n                \n                "
+            template: "\n               <div id=\"progressMeterFull\" (click)=\"videoService.seekVideo($event)\">\n                     <div id=\"progressMeter\" [style.width.px]=\"videoService.calculatedWidth\"\n                                             (click)=\"videoService.seekVideo($event)\"></div>\n                </div>\n                        <div id=\"thumbScrubber\" [style.top.px]=\"videoService.calculatedScrubY - 2\"\n                                                [style.left.px]=\"videoService.calculatedWidth\"\n                                                (mousedown)=\"videoService.dragStart($event)\"></div>\n                \n                "
         }), 
         __metadata('design:paramtypes', [video_service_1.VideoService])
     ], ProgressComponent);

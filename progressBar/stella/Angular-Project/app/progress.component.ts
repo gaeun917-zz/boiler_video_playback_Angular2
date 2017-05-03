@@ -12,11 +12,13 @@ import {VideoService} from "./video.service";
     //<video-app>
     selector: 'video-progress',
     template: `
-               <div id="progressMeterFull">
-                     <div id="progressMeter" [style.width.px]="videoService.calculatedWidth"></div>
+               <div id="progressMeterFull" (click)="videoService.seekVideo($event)">
+                     <div id="progressMeter" [style.width.px]="videoService.calculatedWidth"
+                                             (click)="videoService.seekVideo($event)"></div>
                 </div>
                         <div id="thumbScrubber" [style.top.px]="videoService.calculatedScrubY - 2"
-                                                [style.left.px]="videoService.calculatedWidth"></div>
+                                                [style.left.px]="videoService.calculatedWidth"
+                                                (mousedown)="videoService.dragStart($event)"></div>
                 
                 `
 })

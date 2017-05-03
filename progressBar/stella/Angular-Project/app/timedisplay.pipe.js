@@ -1,6 +1,3 @@
-/**
- * Created by gaeunlee on 5/3/17.
- */
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -11,13 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+/**
+ * Created by gaeunlee on 5/3/17.
+ */
+// pipe = customized filter
 // 1. import pipe & pipeTransform
 var core_1 = require('@angular/core');
 //2. pipe decorator : defining name of pipe
 var TimeDisplayPipe = (function () {
     function TimeDisplayPipe() {
     }
-    // 3.1 transform one number to another
+    // 3.1 filtering function :transform one number to another
     TimeDisplayPipe.prototype.transform = function (value, args) {
         // 3.3 calculating hr, min, sec
         var hh = Math.floor(value / 3600), mm = Math.floor(value / 60) % 60, ss = Math.floor(value) % 60;

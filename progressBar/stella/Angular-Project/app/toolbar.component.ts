@@ -17,23 +17,25 @@ import {TimeDisplayPipe} from "./timedisplay.pipe";
     //<i [ngClass] : {'fa-volume-off:videoService.isMuted', 'fa-volume-up: !videoService.isMute'} >
     selector: 'video-toolbar',
     template: `
+
           <div id="playerToolBar">
-                <a id="playBtn" 
+                 <a id="playBtn" 
                     class="btn btn-default" 
                     (click)="videoService.playVideo()">
-                        <i [ngClass]="{'fa-play': !videoService.isPlaying, 'fa-pause': videoService.isPlaying}"
-                            class="fa"></i>
-                </a>
-                
+                        <i class="fa" [ngClass]="{'fa-play': !videoService.isPlaying, 'fa-pause': videoService.isPlaying}"></i>
+                 </a>            
                  <a id="muteBtn" 
                     class="btn btn-default" 
                     (click)="videoService.muteVideo()">                  
-                            <i [ngClass]="{'fa-volume-off': videoService.isMuted, 'fa-volume-up': !videoService.isMuted}" 
-                               class="fa"></i>
+                        <i class="fa" [ngClass]="{'fa-volume-off': videoService.isMuted, 'fa-volume-up': !videoService.isMuted}" ></i>
                  </a>
-                        
-                        <span id="videoTime">{{videoService.currentTime | timeDisplay }} / {{videoService.totalTime | timeDisplay}}</span>
+                 <span id="videoTime">{{videoService.currentTime | timeDisplay }} / {{videoService.totalTime | timeDisplay}}</span>
+                 
+                 <a id="fsBtn" class="btn btn-default pull-right" 
+                    (click)="videoService.fullScreen()"><i class="fa fa-expand"></i>
+                 </a>
           </div>
+          
                 `,
     pipes: [TimeDisplayPipe]
 })

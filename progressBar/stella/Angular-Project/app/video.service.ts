@@ -26,6 +26,10 @@ export class VideoService{
     public isMuted:boolean = false;
     // 6. toggle the play/pause
     public isPlaying:boolean = false;
+    // 7. thumb srcubber : drag to seek
+    public isDragging:boolean = false;
+    // 8. fullscreen mode
+
 
     constructor(){}
 
@@ -54,15 +58,17 @@ export class VideoService{
 
     //4. caculating progress bar position
     timerFired = () => {
-        //4. where to position the bar
-        this.calculatedScrubY = this.videoElement.offsetHeight;
-        var t = this.videoElement.currentTime;
-        var d = this.videoElement.duration;
+        if(!this.isDragging) {
+            //4. where to position the bar
+            this.calculatedScrubY = this.videoElement.offsetHeight;
+            var t = this.videoElement.currentTime;
+            var d = this.videoElement.duration;
 
-        this.calculatedWidth = (t / d * this.videoElement.offsetWidth);
+            this.calculatedWidth = (t / d * this.videoElement.offsetWidth);
+        }
     };
 
-    //.volume, .paused .play is navite function of vidoeElement
+    //navite function of vidoeElement: .volume, .paused .play
     //5. toggling the sound on/off
     muteVideo() {
         if(this.videoElement.volume == 0) { // false, Sound off == 0
@@ -83,8 +89,45 @@ export class VideoService{
             this.isPlaying = false;
         }
     };
+    //7. click to seek a frame on progress.component click event
+    seekVideo(e:any) {
+        var w = document.getElementById('progressMeterFull').offsetWidth;
+        var d = this.videoElement.duration;
+
+        var s = Math.round(e.pageX / w * d);
+        this.videoElement.currentTime = s;
+    };
+
+    //8. drag to seek
+    dragStart = function(e:any) {
+        this.isDragging = true;
+    };
+    dragMove = function(e:any) {
+        if(this.isDragging){
+            this.calculatedWidth = e.x;
+        }
+    };
+    dragStop = function(e:any) {
+        if(this.isDragging){
+            this.isDragging = false;
+            this.seekVideo(e);
+        }
+    };
 
 
+    // 9. fullscreen (depends on browsers)
+    fullScreen() {
+        if(this.videoElement.requestFullscreen) {
+            this.videoElement.requestFullscreen();
+
+        }else if(this.videoElement.mozRequestFullScreen) {
+            this.videoElement.mozRequestFullScreen();
+        }else if(this.videoElement.webkitRequestFullscreen) {
+            this.videoElement.webkitRequestFullscreen();
+        }else if(this.videoElement.msRequestFullscreen) {
+            this.videoElement.msRequestFullscreen();
+        }
+    };
 
 
 }

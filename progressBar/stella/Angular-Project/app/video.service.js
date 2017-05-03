@@ -15,6 +15,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 //2. Injectable decorator meta
 var VideoService = (function () {
+    // 8. fullscreen mode
     function VideoService() {
         var _this = this;
         this.currentPath = "";
@@ -26,6 +27,8 @@ var VideoService = (function () {
         this.isMuted = false;
         // 6. toggle the play/pause
         this.isPlaying = false;
+        // 7. thumb srcubber : drag to seek
+        this.isDragging = false;
         // 3. triggered event
         this.updateData = function (e) {
             //4. updating variable
@@ -37,11 +40,28 @@ var VideoService = (function () {
         };
         //4. caculating progress bar position
         this.timerFired = function () {
-            //4. where to position the bar
-            _this.calculatedScrubY = _this.videoElement.offsetHeight;
-            var t = _this.videoElement.currentTime;
-            var d = _this.videoElement.duration;
-            _this.calculatedWidth = (t / d * _this.videoElement.offsetWidth);
+            if (!_this.isDragging) {
+                //4. where to position the bar
+                _this.calculatedScrubY = _this.videoElement.offsetHeight;
+                var t = _this.videoElement.currentTime;
+                var d = _this.videoElement.duration;
+                _this.calculatedWidth = (t / d * _this.videoElement.offsetWidth);
+            }
+        };
+        //8. drag to seek
+        this.dragStart = function (e) {
+            this.isDragging = true;
+        };
+        this.dragMove = function (e) {
+            if (this.isDragging) {
+                this.calculatedWidth = e.x;
+            }
+        };
+        this.dragStop = function (e) {
+            if (this.isDragging) {
+                this.isDragging = false;
+                this.seekVideo(e);
+            }
         };
     }
     VideoService.prototype.appSetup = function (v) {
@@ -55,7 +75,7 @@ var VideoService = (function () {
         //3. setInterval calling timerFired function
         window.setInterval(this.timerFired, 500);
     };
-    //.volume, .paused .play is navite function of vidoeElement
+    //navite function of vidoeElement: .volume, .paused .play
     //5. toggling the sound on/off
     VideoService.prototype.muteVideo = function () {
         if (this.videoElement.volume == 0) {
@@ -77,6 +97,30 @@ var VideoService = (function () {
         else {
             this.videoElement.pause();
             this.isPlaying = false;
+        }
+    };
+    ;
+    //7. click to seek a frame on progress.component click event
+    VideoService.prototype.seekVideo = function (e) {
+        var w = document.getElementById('progressMeterFull').offsetWidth;
+        var d = this.videoElement.duration;
+        var s = Math.round(e.pageX / w * d);
+        this.videoElement.currentTime = s;
+    };
+    ;
+    // 9. fullscreen (depends on browsers)
+    VideoService.prototype.fullScreen = function () {
+        if (this.videoElement.requestFullscreen) {
+            this.videoElement.requestFullscreen();
+        }
+        else if (this.videoElement.mozRequestFullScreen) {
+            this.videoElement.mozRequestFullScreen();
+        }
+        else if (this.videoElement.webkitRequestFullscreen) {
+            this.videoElement.webkitRequestFullscreen();
+        }
+        else if (this.videoElement.msRequestFullscreen) {
+            this.videoElement.msRequestFullscreen();
         }
     };
     ;
