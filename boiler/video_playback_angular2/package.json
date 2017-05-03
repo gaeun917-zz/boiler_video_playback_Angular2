@@ -1,7 +1,7 @@
 {
   "name": "angular2-video",
   "version": "1.0.0",
-  "description": "Angular2 video app for Lynda.com.",
+  "description": "Angular2 video app",
   "scripts": {
     "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
     "lite": "lite-server",
