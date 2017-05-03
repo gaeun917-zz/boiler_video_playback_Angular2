@@ -3,14 +3,15 @@ import {Component, OnInit} from '@angular/core';
 import {ProgressComponent} from './progress.component';
 import {ToolbarComponent} from './toolbar.component';
 import {VideoService} from './video.service';
+import {OptionsComponent} from './options.component';
+
+
 
 //2. component
 @Component({
     //<video-app>
     selector: 'video-app',
     template: `
-              <div class="row">
-                <div class="col-sm-12">
                     <div id="fullPlayer" (mouseup)="videoService.dragStop($event)" 
                                          (mousemove)="videoService.dragMove($event)" 
                                          (mouseleave)="videoService.dragStop($event)">
@@ -22,20 +23,25 @@ import {VideoService} from './video.service';
                                    (click)="videoService.playVideo()"></video>
                             <div id="bigPlayButton"
                                    (click)="videoService.playVideo()"
-                                   [hidden]="videoService.isPlaying"><i class="fa fa-play"></i></div>
+                                   [hidden]="videoService.isPlaying"
+                                   [ngClass]="{'fade-out':videoService.isPlaying}"
+                                   class="fader"><i class="fa fa-play"></i></div>
                             <div id="videoTitle" 
-                                 style="font-size: 100px; margin: 250px 720px;"
-                                 [hidden]="videoService.isPlaying">{{videoService.currentTitle}}</div>
+                                 style="font-size: 70px; margin: 100px 300px;"
+                                 [hidden]="videoService.isPlaying"
+                                 [ngClass]="{'fade-out':videoService.isPlaying}" 
+                                 class="fader">{{videoService.currentTitle}}</div>
+                            <video-options  class="fader"
+                                            [hidden]="!videoService.showDetails"
+                                            [ngClass]="{'fade-out':!videoService.showDetails}" ></video-options>
+
                         </div>
                         <!--new angular component-->
                         <video-progress></video-progress>
                         <video-toolbar></video-toolbar>
-                        
                     </div>                
-                </div>
-              </div>
               `,
-    directives: [ProgressComponent, ToolbarComponent],
+    directives: [ProgressComponent, ToolbarComponent, OptionsComponent],
     providers: [VideoService]
 
 })
@@ -48,5 +54,6 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.videoService.appSetup("videoDisplay");
+        this.videoService.gatherJSON();
     }
 }

@@ -13,6 +13,7 @@ var core_1 = require('@angular/core');
 var progress_component_1 = require('./progress.component');
 var toolbar_component_1 = require('./toolbar.component');
 var video_service_1 = require('./video.service');
+var options_component_1 = require('./options.component');
 //2. component
 var AppComponent = (function () {
     // pass VideoService as object
@@ -21,13 +22,14 @@ var AppComponent = (function () {
     }
     AppComponent.prototype.ngOnInit = function () {
         this.videoService.appSetup("videoDisplay");
+        this.videoService.gatherJSON();
     };
     AppComponent = __decorate([
         core_1.Component({
             //<video-app>
             selector: 'video-app',
-            template: "\n              <div class=\"row\">\n                <div class=\"col-sm-12\">\n                    <div id=\"fullPlayer\" (mouseup)=\"videoService.dragStop($event)\" \n                                         (mousemove)=\"videoService.dragMove($event)\" \n                                         (mouseleave)=\"videoService.dragStop($event)\">\n                        <div class=\"embed-responsive embed-responsive-16by9\">\n                            <video id=\"videoDisplay\" \n                                   width=\"100%\" height=\"100%\" \n                                   src=\"{{videoService.currentPath}}\"  \n                                   class=\"embed-responsive-item\" controls\n                                   (click)=\"videoService.playVideo()\"></video>\n                            <div id=\"bigPlayButton\"\n                                   (click)=\"videoService.playVideo()\"\n                                   [hidden]=\"videoService.isPlaying\"><i class=\"fa fa-play\"></i></div>\n                            <div id=\"videoTitle\" \n                                 style=\"font-size: 100px; margin: 250px 720px;\"\n                                 [hidden]=\"videoService.isPlaying\">{{videoService.currentTitle}}</div>\n                        </div>\n                        <!--new angular component-->\n                        <video-progress></video-progress>\n                        <video-toolbar></video-toolbar>\n                        \n                    </div>                \n                </div>\n              </div>\n              ",
-            directives: [progress_component_1.ProgressComponent, toolbar_component_1.ToolbarComponent],
+            template: "\n                    <div id=\"fullPlayer\" (mouseup)=\"videoService.dragStop($event)\" \n                                         (mousemove)=\"videoService.dragMove($event)\" \n                                         (mouseleave)=\"videoService.dragStop($event)\">\n                        <div class=\"embed-responsive embed-responsive-16by9\">\n                            <video id=\"videoDisplay\" \n                                   width=\"100%\" height=\"100%\" \n                                   src=\"{{videoService.currentPath}}\"  \n                                   class=\"embed-responsive-item\" controls\n                                   (click)=\"videoService.playVideo()\"></video>\n                            <div id=\"bigPlayButton\"\n                                   (click)=\"videoService.playVideo()\"\n                                   [hidden]=\"videoService.isPlaying\"\n                                   [ngClass]=\"{'fade-out':videoService.isPlaying}\"\n                                   class=\"fader\"><i class=\"fa fa-play\"></i></div>\n                            <div id=\"videoTitle\" \n                                 style=\"font-size: 70px; margin: 100px 300px;\"\n                                 [hidden]=\"videoService.isPlaying\"\n                                 [ngClass]=\"{'fade-out':videoService.isPlaying}\" \n                                 class=\"fader\">{{videoService.currentTitle}}</div>\n                            <video-options  class=\"fader\"\n                                            [hidden]=\"!videoService.showDetails\"\n                                            [ngClass]=\"{'fade-out':!videoService.showDetails}\" ></video-options>\n\n                        </div>\n                        <!--new angular component-->\n                        <video-progress></video-progress>\n                        <video-toolbar></video-toolbar>\n                    </div>                \n              ",
+            directives: [progress_component_1.ProgressComponent, toolbar_component_1.ToolbarComponent, options_component_1.OptionsComponent],
             providers: [video_service_1.VideoService]
         }), 
         __metadata('design:paramtypes', [video_service_1.VideoService])

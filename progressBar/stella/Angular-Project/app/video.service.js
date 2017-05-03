@@ -13,11 +13,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 //1. import
 var core_1 = require('@angular/core');
+//1.1 gathering json data
+var http_1 = require('@angular/http');
+require('rxjs/add/operator/map');
 //2. Injectable decorator meta
 var VideoService = (function () {
-    // 8. fullscreen mode
-    function VideoService() {
+    function VideoService(http) {
         var _this = this;
+        this.http = http;
         this.currentPath = "";
         this.currentTitle = "loading...";
         // 3. time display
@@ -29,6 +32,12 @@ var VideoService = (function () {
         this.isPlaying = false;
         // 7. thumb srcubber : drag to seek
         this.isDragging = false;
+        // 8. fullscreen mode
+        // 9. playlist detail
+        this.showDetails = false;
+        this.currentDesc = "current video description";
+        //10. gathering json data
+        this.playlist = [];
         // 3. triggered event
         this.updateData = function (e) {
             //4. updating variable
@@ -63,17 +72,36 @@ var VideoService = (function () {
                 this.seekVideo(e);
             }
         };
+        //11. gather json data -> ngOnInit
+        this.gatherJSON = function () {
+            _this.http.get('./data/playlist.json')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.playlist = data;
+                _this.selectedVideo(1);
+            });
+        };
+        // 12. *ngFor
+        this.selectedVideo = function (i) {
+            _this.currentTitle = _this.playlist[i]['title'];
+            _this.currentDesc = _this.playlist[i]['description'];
+            _this.videoElement.src = _this.playlist[i]['path'];
+            _this.videoElement.pause();
+            _this.isPlaying = false;
+        };
     }
     VideoService.prototype.appSetup = function (v) {
         //1. data binding (in this class.)
         this.videoElement = document.getElementById(v);
-        this.currentPath = "./video/cow.mp4";
-        this.currentTitle = "Cow";
-        //2. eventlistener(name,function)
+        // this.currentPath ="./video/cow.mp4";
+        // this.currentTitle = "Cow";
+        // //2. eventlistener(name,function)
         this.videoElement.addEventListener("loadedmetadata", this.updateData);
         this.videoElement.addEventListener("timeupdate", this.updateTime);
         //3. setInterval calling timerFired function
         window.setInterval(this.timerFired, 500);
+        //4. video description
+        // this.currentDesc = "A cow.";
     };
     //navite function of vidoeElement: .volume, .paused .play
     //5. toggling the sound on/off
@@ -124,9 +152,19 @@ var VideoService = (function () {
         }
     };
     ;
+    //10. playlist detail toggling
+    VideoService.prototype.details = function () {
+        if (this.showDetails == false) {
+            this.showDetails = true;
+        }
+        else {
+            this.showDetails = false;
+        }
+    };
+    ;
     VideoService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [http_1.Http])
     ], VideoService);
     return VideoService;
 }());

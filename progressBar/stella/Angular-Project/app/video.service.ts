@@ -4,6 +4,11 @@
 
 //1. import
 import {Injectable} from '@angular/core';
+//1.1 gathering json data
+import {Http, Response} from '@angular/http';
+import 'rxjs/add/operator/map';
+
+
 
 //2. Injectable decorator meta
 @Injectable()
@@ -29,22 +34,28 @@ export class VideoService{
     // 7. thumb srcubber : drag to seek
     public isDragging:boolean = false;
     // 8. fullscreen mode
+    // 9. playlist detail
+    public showDetails:boolean = false;
+    public currentDesc:string = "current video description";
+    //10. gathering json data
+    public playlist:Array<Object> = [];
 
 
-    constructor(){}
+    constructor(private http:Http){}
 
 
     appSetup(v:string){ // data type
         //1. data binding (in this class.)
         this.videoElement = <HTMLVideoElement>document.getElementById(v);
-        this.currentPath ="./video/cow.mp4";
-        this.currentTitle = "Cow";
-        //2. eventlistener(name,function)
+        // this.currentPath ="./video/cow.mp4";
+        // this.currentTitle = "Cow";
+        // //2. eventlistener(name,function)
         this.videoElement.addEventListener("loadedmetadata", this.updateData);
         this.videoElement.addEventListener("timeupdate", this.updateTime);
         //3. setInterval calling timerFired function
         window.setInterval(this.timerFired, 500);
-
+        //4. video description
+        // this.currentDesc = "A cow.";
     }
     // 3. triggered event
     updateData = (e:any) => {
@@ -129,5 +140,32 @@ export class VideoService{
         }
     };
 
+    //10. playlist detail toggling
+    details() {
+        if(this.showDetails == false){
+            this.showDetails = true;
+        }else{
+            this.showDetails = false;
+        }
+    };
 
+    //11. gather json data -> ngOnInit
+    gatherJSON = () => {
+        this.http.get('./data/playlist.json')
+            .map((res:Response) => res.json())
+            .subscribe(
+                data => {
+                    this.playlist = data;
+                    this.selectedVideo(1);
+                }
+            );
+    };
+    // 12. *ngFor
+    selectedVideo = (i:number) => {
+        this.currentTitle = this.playlist[i]['title'];
+        this.currentDesc = this.playlist[i]['description'];
+        this.videoElement.src = this.playlist[i]['path'];
+        this.videoElement.pause();
+        this.isPlaying = false;
+    };
 }
