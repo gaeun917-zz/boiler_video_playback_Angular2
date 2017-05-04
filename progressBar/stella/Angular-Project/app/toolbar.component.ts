@@ -25,7 +25,7 @@ import {TimeDisplayPipe} from "./timedisplay.pipe";
                         <i class="fa" [ngClass]="{'fa-play': !videoService.isPlaying, 'fa-pause': videoService.isPlaying}"></i></a>            
                  <a id="muteBtn" 
                     class="btn btn-default" 
-                    (click)="videoService.muteVideo()">                  
+                    (click)="videoService.muteVideo()">:                  
                         <i class="fa" [ngClass]="{'fa-volume-off': videoService.isMuted, 'fa-volume-up': !videoService.isMuted}" ></i></a>
                  <span id="videoTime">{{videoService.currentTime | timeDisplay }} / {{videoService.totalTime | timeDisplay}}</span>            
                  <a id="fsBtn" class="btn btn-default pull-right" 
